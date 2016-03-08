@@ -138,7 +138,7 @@ if string.len(opt.init_from) > 0 then
         vocab_compatible = false
         print('checkpoint_vocab_size: ' .. checkpoint_vocab_size)
     end
-    print(vocab)
+    --print(vocab)
     assert(vocab_compatible, 'error, the character vocabulary for this dataset and the one in the saved checkpoint are not the same. This is trouble.')
     -- overwrite model settings based on checkpoint to ensure compatibility
     print('overwriting rnn_size=' .. checkpoint.opt.rnn_size .. ', num_layers=' .. checkpoint.opt.num_layers .. ', model=' .. checkpoint.opt.model .. ' based on the checkpoint.')
@@ -277,7 +277,7 @@ function feval(x)
         clones.rnn[t]:training() -- make sure we are in correct mode (this is cheap, sets flag)
   --print(x[t])
   --os.exit()
-      
+        
         local lst = clones.rnn[t]:forward{x[t], unpack(rnn_state[t-1])}
         rnn_state[t] = {}
         for i=1,#init_state do table.insert(rnn_state[t], lst[i]) end -- extract the state, without output
@@ -368,8 +368,8 @@ for i = 1, iterations do
         checkpoint.vocab = loader.vocab_mapping
         torch.save(savefile, checkpoint)
     end
-    average_loss_den = average_loss_den +1
-    average_loss = average_loss + train_loss
+    --average_loss_den = average_loss_den +1
+    --average_loss = average_loss + train_loss
     
     if i % opt.print_every == 0 then
         print(string.format("%d/%d (epoch %.3f), train_loss = %6.8f, grad/param norm = %6.4e, time/batch = %.4fs, average_loss=%6.8f", i, iterations, epoch, train_loss, grad_params:norm() / params:norm(), time, average_loss/average_loss_den))

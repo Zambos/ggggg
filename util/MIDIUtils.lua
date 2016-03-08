@@ -318,25 +318,25 @@ function MIDIUtils.text_to_tensor(in_midifile, out_vocabfile, out_tensorfile)
     f = assert(io.open(datas[i], "r"))
     local currtime = 0;
     local rawdata = MIDI.midi2score(f:read("*all"))
-
+    local used = {}
     if rawdata[3]~=nil then indexer = 3 elseif rawdata[2]~=nil then indexer=2 end
     local currnote = 0;
     for i=1, #rawdata[indexer] do
       if rawdata[indexer][i] ~= nil then
-        if rawdata[indexer][i][1]=="note" then
-          currnote= currnote+1
-          local tempIndex = math.abs(math.floor((math.log10(rawdata[indexer][i][3]/(rawdata[1]/4))/math.log10(2)) +0.5))
-          --print(tempIndex.."  "..rawdata[indexer][i][5].." "..rawdata[1].." "..rawdata[indexer][i][3].."   "..(rawdata[1]/4).."  "..math.log10(rawdata[indexer][i][3]/(rawdata[1]/4))/math. log10(2))
-          --print(rawdata[indexer][i][5]+ 127*tempIndex.."   "..vocab_mapping[rawdata[indexer][i][5]+ 127*tempIndex])
-          --data[1]=3
-         -- print(math.floor(currlen+(rawdata[indexer][i][2] )/(rawdata[1]/4)+1).." "..rawdata[indexer][i][2].."  "..(currlen+(rawdata[indexer][i][2] )/(rawdata[1]/4)+1).." "..(vocab_mapping[rawdata[indexer][i][5]+ 127*tempIndex]))
-          --print(currlen+currnote)
-          
-          data[currlen+currnote] = vocab_mapping[rawdata[indexer][i][5]+ 127*tempIndex]
-          --print(data[currlen+currnote].."   "..vocab_mapping[rawdata[indexer][i][5]+ 127*tempIndex])
-         if data[currlen+currnote]==0 then data[currlen+currnote]=data[currlen+currnote]+1
-         --print(data[currlen+currnote].."   "..vocab_mapping[rawdata[indexer][i][5]+ 127*tempIndex]) 
-         --os.exit()
+        if rawdata[indexer][i][1]=="note" and rawdata[indexer][i][2]~=0 then
+            currnote= currnote+1
+            local tempIndex = math.abs(math.floor((math.log10(rawdata[indexer][i][3]/(rawdata[1]/4))/math.log10(2)) +0.5))
+            --print(tempIndex.."  "..rawdata[indexer][i][5].." "..rawdata[1].." "..rawdata[indexer][i][3].."   "..(rawdata[1]/4).."  "..math.log10(rawdata[indexer][i][3]/(rawdata[1]/4))/math. log10(2))
+            --print(rawdata[indexer][i][5]+ 127*tempIndex.."   "..vocab_mapping[rawdata[indexer][i][5]+ 127*tempIndex])
+            --data[1]=3
+           -- print(math.floor(currlen+(rawdata[indexer][i][2] )/(rawdata[1]/4)+1).." "..rawdata[indexer][i][2].."  "..(currlen+(rawdata[indexer][i][2] )/(rawdata[1]/4)+1).." "..(vocab_mapping[rawdata[indexer][i][5]+ 127*tempIndex]))
+            --print(currlen+currnote)
+            
+            data[currlen+currnote] = vocab_mapping[rawdata[indexer][i][5]+ 127*tempIndex]
+            --print(data[currlen+currnote].."   "..vocab_mapping[rawdata[indexer][i][5]+ 127*tempIndex])
+           if data[currlen+currnote]==0 then data[currlen+currnote]=data[currlen+currnote]+1
+           --print(data[currlen+currnote].."   "..vocab_mapping[rawdata[indexer][i][5]+ 127*tempIndex]) 
+           --os.exit()
          end
         end 
       end
